@@ -13,6 +13,16 @@ MATCH (a) WITH a MATCH (b) SET a.prop = 'match 2' WITH a, b MATCH (c) WITH a, b,
 ```
 we cannot distinguish, whether the `SET` part belongs to the seconds `MATCH` or the first or third one.
 
+My proposed solution to the problem is to change the grammar as following:
+```antlrv4
+oC_MultiPartQuery
+              :  ( oC_MultiPartQueryGroup )+ oC_SinglePartQuery ;
+
+oC_MultiPartQueryGroup
+              :  ( oC_ReadingClause SP? )* ( oC_UpdatingClause SP? )* oC_With SP? ;
+
+```
+
 ## Demo
 This project contains a Spring application which takes the ANTLRv4 grammar of open cypher 
 from https://s3.amazonaws.com/artifacts.opencypher.org/M18/Cypher.g4, generates a visitor 
